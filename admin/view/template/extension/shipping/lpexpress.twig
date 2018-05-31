@@ -1,0 +1,221 @@
+{{ header}}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-omnivalt" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+        </div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+      <div class="alert alert-danger alert-dismissible"><i class="fas fa-exclamation-circle"></i> {{ error_warning }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+    {% endif %}
+
+    <div class="panel panel-default">
+      <div class="panel-heading"><i class="fas fa-pencil-alt"></i> {{ text_edit }}</div>
+      <div class="panel-body">
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab-general" data-toggle="tab">{{ tab_general }}</a></li>
+                <li><a href="#tab-terminals" data-toggle="tab">{{ tab_terminals }}</a></li>
+                <li><a href="#tab-settings" data-toggle="tab">{{ tab_settings }}</a></li>
+            </ul>
+
+            <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-shipping">
+                <div class="tab-content">
+
+                <div id="tab-general" class="tab-pane active">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Available methods</label>
+                        <div class="col-sm-10">
+                        <div class="well well-sm" style="height: 100px; overflow: auto;">
+                            <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="shipping_lpexpress_terminal" value="1"  {% if shipping_lpexpress_terminal %} checked="checked" {% endif %} />
+                                {{ text_lpexpress_terminal }}
+                            </label>
+                            </div>
+                            <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="shipping_lpexpress_post" value="1" {% if shipping_lpexpress_post %} checked="checked" {% endif %}/>
+                                {{ text_lpexpress_post }}
+                            </label>
+                            </div>
+                        </div>
+                    </div></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="shipping_lpexpress_total"><span data-toggle="tooltip" title="{{ help_total }}">{{ entry_total }}</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="shipping_lpexpress_total" id="shipping_lpexpress_total" value="{{ shipping_lpexpress_total }}" class="form-control"  />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="shipping_lpexpress_free_shipping_total"><span data-toggle="tooltip" title="{{ help_shipping_total }}">{{ entry_free_shipping_total }}</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="shipping_lpexpress_free_shipping_total"id="shipping_lpexpress_free_shipping_total" value="{{ shipping_lpexpress_free_shipping_total }}" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="shipping_lpexpress_cost">{{ entry_cost }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="shipping_lpexpress_cost" id="shipping_lpexpress_cost" value="{{ shipping_lpexpress_cost }}" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="shipping_lpexpress_tax_class_id">{{ entry_tax_class }}</label>
+                        <div class="col-sm-10">
+                            <select name="shipping_lpexpress_tax_class_id"  id="shipping_lpexpress_tax_class_id" class="form-control">
+                                <option value="0">{{ text_none }}</option>
+                                {% for tax_class in tax_classes %}
+                                {% if tax_class['tax_class_id'] == shipping_lpexpress_tax_class_id %}
+                                <option value="{{ tax_class['tax_class_id'] }}" selected="selected">{{ tax_class['title'] }}</option>
+                                {% else %}
+                                <option value="{{ tax_class['tax_class_id'] }}">{{ tax_class['title'] }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="shipping_lpexpress_geo_zone_id">{{ entry_geo_zone }}</label>
+                        <div class="col-sm-10">
+                            <select name="shipping_lpexpress_geo_zone_id"  id="shipping_lpexpress_geo_zone_id" class="form-control">
+                                <option value="0">{{ text_all_zones }}</option>
+                                {% for geo_zone in geo_zones %}
+                                {% if geo_zone['geo_zone_id'] == shipping_lpexpress_geo_zone_id %}
+                                <option value="{{ geo_zone['geo_zone_id'] }}" selected="selected">{{ geo_zone['name'] }}</option>
+                                {% else %}
+                                <option value="{{ geo_zone['geo_zone_id'] }}">{{ geo_zone['name'] }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="shipping_lpexpress_status">{{ entry_status }}</label>
+                        <div class="col-sm-10">
+                            <select name="shipping_lpexpress_status" id="shipping_lpexpress_status" class="form-control">
+                                {% if shipping_lpexpress_status %}
+                                <option value="1" selected="selected">{{ text_enabled }}</option>
+                                <option value="0">{{ text_disabled }}</option>
+                                {% else %}
+                                <option value="1">{{ text_enabled }}</option>
+                                <option value="0" selected="selected">{{ text_disabled }}</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="shipping_lpexpress_sort_order">{{ entry_sort_order }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="shipping_lpexpress_sort_order" value="{{ shipping_lpexpress_sort_order }}" placeholder="{{ entry_sort_order }}" id="shipping_lpexpress_sort_order" class="form-control" />
+                        </div>
+                    </div>
+
+
+                </div>
+                <div id="tab-terminals" class="tab-pane">
+                    <div class="buttons"><a href="{{update_terminals}}"class="btn btn-primary">{{ button_getterminals }}</a></div>
+                    <div class="table-responsive">
+                    <table class="table table-bordered table-hover list">
+                        <thead>
+                        <tr>
+                            <td>{{ column_name }}</td>
+                            <td>{{ column_address }}</td>
+                            <td>{{ column_comment }}</td>
+                            <td>{{ column_collecting }}</td>
+                            <td>{{ column_working }}</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for terminal in terminals %}
+                        <tr>
+                            <td>{{ terminal['name'] }}</td>
+                            <td>{{ terminal['address'] }}</td>
+                            <td>{{ terminal['comment'] }}</td>
+                            <td>{{ terminal['collectinghours'] }}</td>
+                            <td>{{ terminal['workinghours'] }}</td>
+
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <div id="tab-settings" class="tab-pane">
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="shipping_lpexpress_format"><span data-toggle="tooltip" title="{{ help_terminal_format }}">{{ entry_terminal_format }}</span></label>
+                        <div class="col-sm-10">
+                            <input type="text" name="shipping_lpexpress_format" value="{{ shipping_lpexpress_format }}" id="shipping_lpexpress_format" class="form-control" />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="shipping_lpexpress_terminal_order"><span data-toggle="tooltip" title="{{ help_terminal_order }}">{{ entry_terminal_order }}</span></label>
+                        <div class="col-sm-4">
+                            <select name="shipping_lpexpress_terminal_order" id="shipping_lpexpress_terminal_order" class="form-control">
+                                <option value="sort_order" {% if shipping_lpexpress_terminal_order == sort_order %} selected{% endif %}>{{ text_sort_order_field }}</option>
+                                <option value="name" {% if shipping_lpexpress_terminal_order == name %} selected{% endif %}>{{ text_name_field }}</option>
+                                <option value="city"{% if shipping_lpexpress_terminal_order == city %} selected{% endif %}>{{ text_city_field }}</option>
+                                <option value="address"{% if shipping_lpexpress_terminal_order == address %} selected{% endif %}>{{ text_address_field }}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <select name="shipping_lpexpress_terminal_order_dir" class="form-control">
+                                <option value="ASC" {% if shipping_lpexpress_terminal_order_dir == 'ASC' %} selected{% endif %}>ASC</option>
+                                <option value="DESC" {% if shipping_lpexpress_terminal_order_dir == 'DESC' %} selected{% endif %}>DESC</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+             </div>
+            </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript"><!--
+
+    getTerminals = function() {
+        
+        html = '<tr><td colspan="5">{{ text_loading }}</td></tr>';
+        $('.list tbody').html(html);
+
+        //$.get("index.php?route=extension/shipping/lpexpress/importterminals&token={{user_token}}",function(data,status){
+        $.get("{{update_terminals}}",function(data,status){
+
+console.log(data);
+            html = '';
+            $.each( data, function( key, value ) {
+                console.log('dfsf');
+                html += '<tr><td>' + value.name + '</td><td>'+value.address+'</td><td>'+value.comment+'</td><td>'+value.collectinghours+'</td><td>'+value.workinghours+'</td></tr>';
+            });
+            $('.list tbody').html(html);
+        }, 'JSON');
+
+
+    }
+    //--></script>
+{{ footer }} 
